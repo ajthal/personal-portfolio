@@ -253,7 +253,7 @@ export const CHARACTER: CharacterData = {
     { label: "Craft", val: 17, icon: "Sword" },
     { label: "Velocity", val: 15, icon: "Flame" },
     { label: "Resilience", val: 16, icon: "Shield" },
-    { label: "Taste", val: 16, icon: "Palette" },
+    { label: "Taste", val: 20, icon: "Palette" },
     { label: "Communication", val: 15, icon: "Scroll" }
   ],
   attrs: [

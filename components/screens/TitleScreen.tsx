@@ -108,7 +108,7 @@ export default function TitleScreen({ onStart, labelMode, audioOn }: TitleScreen
       )}
 
       <div className="title-copyright">
-        ANDREW THALHEIMER™ · PORTFOLIO EDITION · © 2025 · CRAFTED IN CODE
+        ANDREW THALHEIMER™ · PORTFOLIO EDITION · © 2026 · CRAFTED IN CODE
       </div>
     </div>
   );

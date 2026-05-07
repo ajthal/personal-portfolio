@@ -792,8 +792,8 @@ img { display: block; max-width: 100%; }
   background: var(--panel-bg);
   border: 1px solid var(--gold);
   padding: 40px;
-  max-width: min(90vw, 1400px);
-  max-height: calc(100vh - 120px);
+  max-width: 1400px;
+  max-height: 780px;
   box-shadow:
     0 0 0 1px rgba(200,154,92,.25),
     0 0 60px rgba(226,88,34,.18),
@@ -803,8 +803,8 @@ img { display: block; max-width: 100%; }
   gap: 18px;
 }
 .lb-image-wrap {
-  max-width: min(82vw, 1320px);
-  max-height: calc(100vh - 260px);
+  max-width: 1320px;
+  max-height: 640px;
   height: auto; width: auto;
   background: #0b0807;
   border: 1px solid var(--rule);

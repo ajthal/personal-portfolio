@@ -44,7 +44,7 @@ export default function PhotoLightbox({ item, sel, setSel, aspectFor, onClose }:
             ? <img
                 src={src}
                 alt={`${item.name} ${sel+1}`}
-                style={{ display: "block", maxWidth: "100%", maxHeight: "calc(100vh - 260px)", width: "auto", height: "auto", objectFit: "contain" }}
+                style={{ display: "block", maxWidth: "100%", maxHeight: "640px", width: "auto", height: "auto", objectFit: "contain" }}
                 draggable={false}
               />
             : <Placeholder

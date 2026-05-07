@@ -21,6 +21,12 @@ export type ProjectItem = {
   locked?: boolean;
 };
 
+export type GalleryImage = {
+  src: string;
+  width: number;
+  height: number;
+};
+
 export type GalleryItem = {
   id: string;
   name: string;
@@ -28,7 +34,7 @@ export type GalleryItem = {
   count: number;
   flavor?: string;
   seed?: number;
-  images?: string[];
+  images?: GalleryImage[];
 };
 
 export type Category = {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/icons/Icon";
 import { type Category, type ProjectItem, type GalleryItem } from "@/lib/data";
 import { Audio$ } from "@/lib/audio";
@@ -202,7 +203,14 @@ function GalleryBody({ items, sel, setSel, onOpen }: { items: GalleryItem[]; sel
               onClick={() => { Audio$.select(); onOpen(it); }}
             >
               {cover
-                ? <img src={cover} alt={it.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} draggable={false} />
+                ? <Image
+                    src={cover.src}
+                    alt={it.name}
+                    fill
+                    sizes="360px"
+                    style={{ objectFit: "cover" }}
+                    draggable={false}
+                  />
                 : <Placeholder label={it.name} seed={it.seed || i+1} aspect="4/3" style={{ height: "100%" }} />
               }
               <div style={{

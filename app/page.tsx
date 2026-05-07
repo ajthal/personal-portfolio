@@ -1,9 +1,48 @@
 import fs from "node:fs";
 import path from "node:path";
 import App from "@/components/App";
-import { CATEGORIES, isProjectItem, type GalleryItem } from "@/lib/data";
+import { CATEGORIES, isProjectItem, type GalleryImage, type GalleryItem } from "@/lib/data";
 
 const IMAGE_RE = /\.(png|jpe?g|webp|gif|avif)$/i;
+
+function readImageDim(filePath: string): { width: number; height: number } | null {
+  try {
+    const fd = fs.openSync(filePath, "r");
+    const head = Buffer.alloc(24);
+    fs.readSync(fd, head, 0, 24, 0);
+
+    if (head[0] === 0x89 && head[1] === 0x50 && head[2] === 0x4e && head[3] === 0x47) {
+      fs.closeSync(fd);
+      return { width: head.readUInt32BE(16), height: head.readUInt32BE(20) };
+    }
+
+    if (head[0] === 0xff && head[1] === 0xd8) {
+      const fileSize = fs.fstatSync(fd).size;
+      const buf = Buffer.alloc(Math.min(fileSize, 256 * 1024));
+      fs.readSync(fd, buf, 0, buf.length, 0);
+      fs.closeSync(fd);
+      let i = 2;
+      while (i < buf.length - 9) {
+        if (buf[i] !== 0xff) { i++; continue; }
+        while (i < buf.length && buf[i] === 0xff) i++;
+        const marker = buf[i];
+        if (marker === 0x00 || marker === 0xd8 || marker === 0xd9) { i++; continue; }
+        if ((marker >= 0xc0 && marker <= 0xc3) || (marker >= 0xc5 && marker <= 0xc7) ||
+            (marker >= 0xc9 && marker <= 0xcb) || (marker >= 0xcd && marker <= 0xcf)) {
+          return { height: buf.readUInt16BE(i + 4), width: buf.readUInt16BE(i + 6) };
+        }
+        const segLen = buf.readUInt16BE(i + 1);
+        i += 1 + segLen;
+      }
+      return null;
+    }
+
+    fs.closeSync(fd);
+    return null;
+  } catch {
+    return null;
+  }
+}
 
 function listProjectImages(projectId: string): string[] {
   const dir = path.join(process.cwd(), "public", "projects", projectId);
@@ -77,7 +116,16 @@ function listPhotoGalleries(): GalleryItem[] {
       .sort();
     if (files.length === 0) continue;
 
-    const images = files.map(f => `/photos/${encodeURIComponent(ent.name)}/${encodeURIComponent(f)}`);
+    const images: GalleryImage[] = files.flatMap(f => {
+      const dim = readImageDim(path.join(dir, f));
+      if (!dim) return [];
+      return [{
+        src: `/photos/${encodeURIComponent(ent.name)}/${encodeURIComponent(f)}`,
+        width: dim.width,
+        height: dim.height,
+      }];
+    });
+    if (images.length === 0) continue;
     const meta = readPhotoMeta(dir);
     galleries.push({
       id: slugify(ent.name),

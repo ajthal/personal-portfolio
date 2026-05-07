@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/icons/Icon";
 import type { GalleryItem } from "@/lib/data";
 import { Audio$ } from "@/lib/audio";
@@ -57,18 +58,26 @@ export default function PhotoGallery({ item, onBack }: PhotoGalleryProps) {
         <div className="photo-grid" style={{ overflow: "auto", border: "1px solid var(--rule)" }}>
           {Array.from({ length: count }).map((_, i) => {
             const aspect = aspectFor(i);
-            const src = images[i];
+            const img = images[i];
             return (
               <div
-                key={src || i}
+                key={img?.src || i}
                 className={"photo-tile" + (i === sel ? " selected" : "")}
                 onMouseEnter={() => { if (sel !== i) { setSel(i); Audio$.move(); } }}
                 onClick={() => { Audio$.select(); setSel(i); setZoom(true); }}
-                style={src ? undefined : { aspectRatio: aspect.replace("/", " / ") }}
+                style={img ? undefined : { aspectRatio: aspect.replace("/", " / ") }}
                 title="Click to examine"
               >
-                {src
-                  ? <img src={src} alt={`${item.name} ${i+1}`} style={{ width: "100%", height: "auto", display: "block" }} draggable={false} loading="lazy" />
+                {img
+                  ? <Image
+                      src={img.src}
+                      alt={`${item.name} ${i+1}`}
+                      width={img.width}
+                      height={img.height}
+                      sizes="280px"
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                      draggable={false}
+                    />
                   : <Placeholder label={`${item.name} №${String(i+1).padStart(2,'0')}`} seed={(i+1)*(item.seed||3)} aspect={aspect} style={{ height: "100%" }} />
                 }
               </div>

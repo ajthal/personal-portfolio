@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import Image from "next/image";
 import { FrameOrnaments } from "@/components/icons/Icon";
 import type { GalleryItem } from "@/lib/data";
 import { Audio$ } from "@/lib/audio";
@@ -17,7 +18,7 @@ interface PhotoLightboxProps {
 export default function PhotoLightbox({ item, sel, setSel, aspectFor, onClose }: PhotoLightboxProps) {
   const images = item.images || [];
   const count = images.length || item.count;
-  const src = images[sel];
+  const img = images[sel];
   const aspect = aspectFor(sel);
 
   useEffect(() => {
@@ -39,11 +40,14 @@ export default function PhotoLightbox({ item, sel, setSel, aspectFor, onClose }:
 
       <div className="lb-frame" onClick={(e) => e.stopPropagation()}>
         <FrameOrnaments />
-        <div className="lb-image-wrap" style={src ? undefined : { aspectRatio: aspect.replace("/", " / ") }}>
-          {src
-            ? <img
-                src={src}
+        <div className="lb-image-wrap" style={img ? undefined : { aspectRatio: aspect.replace("/", " / ") }}>
+          {img
+            ? <Image
+                src={img.src}
                 alt={`${item.name} ${sel+1}`}
+                width={img.width}
+                height={img.height}
+                sizes="1320px"
                 style={{ display: "block", maxWidth: "100%", maxHeight: "640px", width: "auto", height: "auto", objectFit: "contain" }}
                 draggable={false}
               />
